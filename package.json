@@ -13,8 +13,10 @@
     "deploy-commands": "tsx src/deploy-commands.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.100.1",
     "discord.js": "^14.16.3",
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",

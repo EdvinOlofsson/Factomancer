@@ -1,4 +1,5 @@
-<!-- Generated: 2026-06-05 | Files scanned: 23 | Token estimate: ~300 -->
+<!-- Generated: 2026-06-06 | Files scanned: 34 | Token estimate: ~300 -->
+<!-- /factcheck uses web search ($10/1k searches); /perspectives uses no tools (tokens only, much cheaper) -->
 
 # Dependencies & External Services
 

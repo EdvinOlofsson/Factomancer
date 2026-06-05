@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from 'discord.js'
+import { MessageFlags, SlashCommandBuilder } from 'discord.js'
 import type { Command } from '../types.js'
 import { getUsageStats } from '../factcheck/limiter.js'
 
@@ -19,6 +19,6 @@ export const usageCommand: Command = {
       `-# Limits reset: your quota hourly, server quota at midnight UTC.`,
     ]
 
-    await interaction.reply({ content: lines.join('\n'), ephemeral: true })
+    await interaction.reply({ content: lines.join('\n'), flags: MessageFlags.Ephemeral })
   },
 }

@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from 'discord.js'
+import { MessageFlags, SlashCommandBuilder } from 'discord.js'
 import type { Command } from '../types.js'
 import { factCheck } from '../factcheck/index.js'
 import { formatFactCheckEmbed } from '../factcheck/format.js'
@@ -20,7 +20,7 @@ export const factcheckCommand: Command = {
     const limit = checkRateLimit(userId)
 
     if (!limit.allowed) {
-      await interaction.reply({ content: `⏱️ ${limit.reason}`, ephemeral: true })
+      await interaction.reply({ content: `⏱️ ${limit.reason}`, flags: MessageFlags.Ephemeral })
       return
     }
 

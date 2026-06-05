@@ -16,7 +16,7 @@ export function formatFactCheckEmbed(
 
   const embed = new EmbedBuilder()
     .setTitle(config.label)
-    .setDescription(`**Claim:** *${claim.slice(0, 256)}*\n\n${result.explanation}`)
+    .setDescription(`**Claim:** *${claim.slice(0, 256)}*\n\n${result.explanation.slice(0, 3500)}`)
     .setColor(config.color)
     .setFooter({ text: `Confidence: ${result.caveat}` })
 

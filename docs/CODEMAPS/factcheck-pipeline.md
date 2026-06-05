@@ -1,4 +1,5 @@
-<!-- Generated: 2026-06-05 | Files scanned: 23 | Token estimate: ~700 -->
+<!-- Generated: 2026-06-06 | Files scanned: 34 | Token estimate: ~700 -->
+<!-- NOTE: client.ts uses src/lib/anthropic.ts; parse.ts uses src/lib/json-extract.ts (shared with /perspectives) -->
 
 # Factcheck Pipeline
 

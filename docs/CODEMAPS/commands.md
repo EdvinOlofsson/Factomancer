@@ -1,4 +1,4 @@
-<!-- Generated: 2026-06-05 | Files scanned: 23 | Token estimate: ~400 -->
+<!-- Generated: 2026-06-06 | Files scanned: 34 | Token estimate: ~450 -->
 
 # Commands & Registration
 
@@ -7,7 +7,8 @@
 | Command | File | Scope | Notes |
 |---------|------|-------|-------|
 | `/ping` | `src/commands/ping.ts` | Public | Latency check, no AI |
-| `/factcheck <claim>` | `src/commands/factcheck.ts` | Public | Rate-limited; 500 char max |
+| `/factcheck <claim>` | `src/commands/factcheck.ts` | Public | Rate-limited; web search + source verification; 500 char max |
+| `/perspectives <topic>` | `src/commands/perspectives.ts` | Public | Rate-limited; four ideological lenses; no web search; 300 char max |
 | `/usage` | `src/commands/usage.ts` | Ephemeral | Quota display |
 
 ## Command Interface (src/types.ts)
@@ -19,43 +20,41 @@ interface Command {
 }
 ```
 
-`SlashCommandOptionsOnlyBuilder` is the return type of `addStringOption()` etc. — use the
-union when a command adds options.
-
-## Registration Pattern
-
-Every new command requires changes in **three files**:
+## Registration Pattern (three files)
 
 ```
-src/commands/<name>.ts       — implement Command interface
-src/index.ts                 — commands.set(cmd.data.name, cmd)
-src/deploy-commands.ts       — commands array push cmd.data.toJSON()
+src/commands/<name>.ts    — implement Command interface
+src/index.ts              — commands.set(cmd.data.name, cmd)
+src/deploy-commands.ts    — commands array push cmd.data.toJSON()
 ```
+Then `pnpm deploy-commands` to push to Discord (commands are cached — invisible until deployed).
 
-Then run `pnpm deploy-commands` to push to Discord's API. Discord caches commands — the
-new command will not appear until deploy-commands runs.
+## AI Command Template (the shared shape)
 
-## Event Routing (src/events/interactionCreate.ts)
-
-```
-Interaction received
-  → isChatInputCommand() guard
-  → commands.get(interaction.commandName)
-  → command.execute(interaction).catch(console.error)
-```
-
-## Rate Limiting (src/factcheck/limiter.ts)
-
-Applied in `factcheck.ts` only. Pattern for any future AI command:
+Both `/factcheck` and `/perspectives` follow this exactly:
 
 ```ts
 const limit = checkRateLimit(interaction.user.id)   // synchronous
 if (!limit.allowed) {
-  await interaction.reply({ content: `⏱️ ${limit.reason}`, ephemeral: true })
+  await interaction.reply({ content: `⏱️ ${limit.reason}`, flags: MessageFlags.Ephemeral })
   return
 }
 recordUsage(interaction.user.id)
-await interaction.deferReply()   // ← ALWAYS after the rate-limit check
+await interaction.deferReply()                       // ← always after the rate-limit check
+// ... call the module's generate/factCheck function
+// ... null/empty → friendly editReply; else editReply({ embeds: [embed] })
+// catch → console.error(message) + friendly editReply
 ```
 
-Defaults: 5 calls/user/hour, 20 calls/day global. Override via `.env`.
+New AI commands reuse `src/factcheck/limiter.ts` and `src/lib/`.
+
+## Event Routing (src/events/interactionCreate.ts)
+
+```
+Interaction → isChatInputCommand() → commands.get(name) → command.execute().catch(console.error)
+```
+
+## Rate Limiting (src/factcheck/limiter.ts — shared)
+
+Defaults: 5 calls/user/hour, 20 calls/day global (shared across all AI commands).
+Override via `RATE_LIMIT_PER_USER_HOUR` / `RATE_LIMIT_GLOBAL_DAILY`. In-memory; resets on restart.

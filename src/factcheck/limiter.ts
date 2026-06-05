@@ -40,7 +40,7 @@ export function checkRateLimit(userId: string): RateLimitResult {
   if (dailyCount >= GLOBAL_DAILY_LIMIT) {
     return {
       allowed: false,
-      reason: `Daily limit reached (${GLOBAL_DAILY_LIMIT} fact-checks/day). Resets at midnight UTC.`,
+      reason: `Daily limit reached (${GLOBAL_DAILY_LIMIT} requests/day). Resets at midnight UTC.`,
     }
   }
 
@@ -53,7 +53,7 @@ export function checkRateLimit(userId: string): RateLimitResult {
     const minutes = Math.ceil(retryAfterMs / 60_000)
     return {
       allowed: false,
-      reason: `You've used all ${PER_USER_LIMIT} of your hourly fact-checks. Try again in ${minutes} minute${minutes === 1 ? '' : 's'}.`,
+      reason: `You've used all ${PER_USER_LIMIT} of your hourly requests. Try again in ${minutes} minute${minutes === 1 ? '' : 's'}.`,
       retryAfterMs,
     }
   }

@@ -1,18 +1,8 @@
-import Anthropic from '@anthropic-ai/sdk'
+import type Anthropic from '@anthropic-ai/sdk'
+import { getAnthropicClient } from '../lib/anthropic.js'
 import { buildSystemPrompt, buildUserMessage } from './prompt.js'
 
 const MODEL = 'claude-sonnet-4-6'
-
-let _client: Anthropic | null = null
-
-function getClient(): Anthropic {
-  if (!_client) {
-    const apiKey = process.env.ANTHROPIC_API_KEY
-    if (!apiKey) throw new Error('Missing env var: ANTHROPIC_API_KEY')
-    _client = new Anthropic({ apiKey })
-  }
-  return _client
-}
 
 export interface FactCheckRaw {
   text: string
@@ -21,7 +11,7 @@ export interface FactCheckRaw {
 }
 
 export async function runFactCheck(claim: string): Promise<FactCheckRaw> {
-  const response = await getClient().messages.create({
+  const response = await getAnthropicClient().messages.create({
     model: MODEL,
     max_tokens: 2048,
     system: buildSystemPrompt(),

@@ -28,6 +28,7 @@ Personal Discord bot built with discord.js v14 and TypeScript.
 |---------|-----------|---------|
 | `/ping` | Public | Latency check |
 | `/factcheck <claim>` | Public | AI fact-check with web search and source verification |
+| `/perspectives <topic>` | Public | Four ideological lenses (left/right/libertarian/authoritarian) on any topic |
 | `/usage` | Ephemeral (you only) | Show remaining quota for you and the server |
 
 ## Rate Limiting

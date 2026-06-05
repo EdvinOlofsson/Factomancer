@@ -77,3 +77,21 @@ src/
 1. Create `src/commands/<name>.ts` implementing the `Command` interface
 2. Import and register it in `src/index.ts` and `src/deploy-commands.ts`
 3. Run `pnpm deploy-commands` to push it to Discord
+
+## Architecture Constraints (vibe-coding invariants — do not break silently)
+
+1. **`deferReply()` first** — any command that calls the AI must `await interaction.deferReply()` as the very first async call on the allowed path. Discord kills un-acked interactions at 3 seconds.
+2. **Rate limit before defer** — `checkRateLimit()` is synchronous and must run before `deferReply()`. If denied, use `interaction.reply({ ephemeral: true })` and `return`.
+3. **Verifier owns the source list** — sources not present in the URLs actually retrieved by web search are dropped by `verify.ts` before reaching Discord. Never bypass this.
+4. **`basedOnModelKnowledge` is verifier-only** — this flag must never appear in the model-facing Zod schema (`factCheckResultSchema`). Only `verifyFactCheck()` sets it.
+5. **`educatedGuess` only under `no_evidence`** — enforced in both `parse.ts` and `verify.ts`. Any other verdict must have this field stripped.
+6. **Deploy after adding commands** — Discord caches slash commands. New commands are invisible until `pnpm deploy-commands` runs.
+
+## Architecture Docs
+
+Token-lean codemaps for AI context loading — read these before making large changes:
+
+- `docs/CODEMAPS/architecture.md` — system overview, data flow, invariants
+- `docs/CODEMAPS/factcheck-pipeline.md` — the AI pipeline in detail
+- `docs/CODEMAPS/commands.md` — command registration pattern, routing, rate limiting
+- `docs/CODEMAPS/dependencies.md` — packages, env vars, cost model

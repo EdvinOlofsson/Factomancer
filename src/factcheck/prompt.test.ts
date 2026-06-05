@@ -35,6 +35,19 @@ describe('buildSystemPrompt', () => {
     expect(prompt).toMatch(/educated.?guess/i)
     expect(prompt).toContain('no_evidence')
   })
+
+  it('defines fact-vs-opinion criteria', () => {
+    expect(prompt.toLowerCase()).toMatch(/value judgment|interpretation|prediction/)
+  })
+
+  it('bounds the opinion both-sides guidance and forbids taking a side', () => {
+    expect(prompt.toLowerCase()).toMatch(/each side|both sides/)
+    expect(prompt.toLowerCase()).toMatch(/which side is right|never.*side/)
+  })
+
+  it('includes worked examples', () => {
+    expect(prompt).toMatch(/## Examples/)
+  })
 })
 
 describe('buildUserMessage', () => {

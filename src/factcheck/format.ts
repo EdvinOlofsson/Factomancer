@@ -1,5 +1,5 @@
 import { EmbedBuilder } from 'discord.js'
-import type { FactCheckResult, Verdict } from './types.js'
+import type { VerifiedFactCheckResult, Verdict } from './types.js'
 
 const VERDICT_CONFIG: Record<Verdict, { color: number; label: string }> = {
   supported: { color: 0x2ecc71, label: '✅ Supported' },
@@ -8,7 +8,10 @@ const VERDICT_CONFIG: Record<Verdict, { color: number; label: string }> = {
   opinion: { color: 0xf39c12, label: '💭 Opinion — not factually checkable' },
 }
 
-export function formatFactCheckEmbed(result: FactCheckResult, claim: string): EmbedBuilder {
+export function formatFactCheckEmbed(
+  result: VerifiedFactCheckResult,
+  claim: string,
+): EmbedBuilder {
   const config = VERDICT_CONFIG[result.verdict]
 
   const embed = new EmbedBuilder()
@@ -25,10 +28,17 @@ export function formatFactCheckEmbed(result: FactCheckResult, claim: string): Em
     embed.addFields({ name: 'Sources', value: sourceLines })
   }
 
+  if (result.basedOnModelKnowledge) {
+    embed.addFields({
+      name: '⚠️ No sources found',
+      value: "This verdict is based on the model's own knowledge, not retrieved sources.",
+    })
+  }
+
   if (result.educatedGuess) {
     embed.addFields({
       name: '📝 Educated guess (unverified)',
-      value: result.educatedGuess.slice(0, 1024),
+      value: `⚠️ Unverified — not a fact-check. ${result.educatedGuess}`.slice(0, 1024),
     })
   }
 

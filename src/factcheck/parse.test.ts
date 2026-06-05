@@ -82,4 +82,20 @@ describe('parseFactCheckResult', () => {
     expect(result.sources).toEqual([])
     expect(result.educatedGuess).toBeUndefined()
   })
+
+  it('skips a non-matching JSON object and returns the valid verdict object', () => {
+    const input =
+      'Here is the format I will use: {"foo":"bar"}\n\nMy answer:\n' +
+      '{"verdict":"supported","caveat":"ok","explanation":"yes","sources":[]}'
+    const result = parseFactCheckResult(input)
+    expect(result.verdict).toBe('supported')
+  })
+
+  it('handles a JSON string value containing braces', () => {
+    const input =
+      '{"verdict":"opinion","caveat":"c","explanation":"contains { and } braces","sources":[]}'
+    const result = parseFactCheckResult(input)
+    expect(result.verdict).toBe('opinion')
+    expect(result.explanation).toContain('{')
+  })
 })

@@ -95,4 +95,34 @@ describe('formatFactCheckEmbed', () => {
     )
     expect(guessField).toBeUndefined()
   })
+
+  it('prefixes the educated guess with an unverified disclaimer', () => {
+    const result: FactCheckResult = {
+      ...base,
+      verdict: 'no_evidence',
+      educatedGuess: 'My guess here.',
+    }
+    const embed = formatFactCheckEmbed(result, 'Test claim')
+    const guessField = embed.data.fields?.find((f) =>
+      f.name.toLowerCase().includes('educated'),
+    )
+    expect(guessField?.value).toContain('not a fact-check')
+    expect(guessField?.value).toContain('My guess here.')
+  })
+
+  it('shows a no-sources warning when basedOnModelKnowledge is set', () => {
+    const embed = formatFactCheckEmbed(
+      { ...base, verdict: 'disproven', sources: [], basedOnModelKnowledge: true },
+      'Test claim',
+    )
+    const warning = embed.data.fields?.find((f) => f.name.includes('No sources'))
+    expect(warning).toBeDefined()
+    expect(warning?.value).toContain("model's own knowledge")
+  })
+
+  it('omits the no-sources warning when not flagged', () => {
+    const embed = formatFactCheckEmbed(base, 'Test claim')
+    const warning = embed.data.fields?.find((f) => f.name.includes('No sources'))
+    expect(warning).toBeUndefined()
+  })
 })

@@ -24,7 +24,7 @@ export const factcheckCommand: Command = {
       const embed = formatFactCheckEmbed(result, claim)
       await interaction.editReply({ embeds: [embed] })
     } catch (error) {
-      console.error('[factcheck] Error:', error)
+      console.error('[factcheck] Error:', error instanceof Error ? error.message : error)
       await interaction.editReply({
         content: '⚠️ An error occurred while fact-checking. Please try again.',
       })

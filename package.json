@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint src",
     "test": "vitest run",
+    "eval": "tsx src/eval/run.ts",
     "deploy-commands": "tsx src/deploy-commands.ts"
   },
   "dependencies": {

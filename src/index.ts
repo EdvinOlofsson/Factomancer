@@ -6,6 +6,10 @@ import { factcheckCommand } from './commands/factcheck.js'
 import { readyEvent } from './events/ready.js'
 import { interactionCreateEvent } from './events/interactionCreate.js'
 
+if (!process.env.ANTHROPIC_API_KEY) {
+  throw new Error('Missing env var: ANTHROPIC_API_KEY (required for /factcheck)')
+}
+
 const client = new Client({ intents: [GatewayIntentBits.Guilds] })
 
 const commands = new Collection<string, Command>()

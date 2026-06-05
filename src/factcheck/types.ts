@@ -17,3 +17,12 @@ export const factCheckResultSchema = z.object({
   educatedGuess: z.string().optional(),
 })
 export type FactCheckResult = z.infer<typeof factCheckResultSchema>
+
+/**
+ * The verifier's output: a model result enriched with a derived flag.
+ * `basedOnModelKnowledge` is set ONLY by the verifier (never by the model),
+ * so it deliberately lives outside the model-facing schema.
+ */
+export type VerifiedFactCheckResult = FactCheckResult & {
+  basedOnModelKnowledge?: boolean
+}

@@ -14,10 +14,15 @@ function getClient(): Anthropic {
   return _client
 }
 
-export async function runFactCheck(claim: string): Promise<string> {
+export interface FactCheckRaw {
+  text: string
+  retrievedUrls: string[]
+}
+
+export async function runFactCheck(claim: string): Promise<FactCheckRaw> {
   const response = await getClient().messages.create({
     model: MODEL,
-    max_tokens: 1024,
+    max_tokens: 2048,
     system: buildSystemPrompt(),
     messages: [{ role: 'user', content: buildUserMessage(claim) }],
     tools: [
@@ -40,5 +45,16 @@ export async function runFactCheck(claim: string): Promise<string> {
     .map((block) => block.text)
     .join('\n')
 
-  return text
+  // Collect the URLs web search actually retrieved, so the verifier can
+  // distinguish real sources from ones the model may have fabricated.
+  const retrievedUrls: string[] = []
+  for (const block of response.content) {
+    if (block.type === 'web_search_tool_result' && Array.isArray(block.content)) {
+      for (const item of block.content) {
+        if (item.type === 'web_search_result') retrievedUrls.push(item.url)
+      }
+    }
+  }
+
+  return { text, retrievedUrls }
 }

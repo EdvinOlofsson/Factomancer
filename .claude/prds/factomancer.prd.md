@@ -51,7 +51,7 @@ We'll know we're right when **we reach for it mid-discussion instead of Googling
 |---|---|---|---|---|
 | 1 | Sourced verdicts in Discord | `/factcheck <claim>` returns a verdict + worded caveat + source links, mirroring the claim's language | complete | `.claude/plans/factomancer.plan.md` |
 | 2 | Trustworthy honesty behaviour | Reliably distinguishes factual / contested / unverifiable claims and never fabricates numbers; "no solid evidence" path and labeled educated-guess behave correctly | complete | `.claude/plans/factomancer-m2.plan.md` |
-| 3 | Budget-safe operation | Group can use it without runaway cost; rate/cost guardrails keep it within the $5 balance | pending | — |
+| 3 | Budget-safe operation | Group can use it without runaway cost; rate/cost guardrails keep it within the $5 balance | in-progress | `.claude/plans/factomancer-m3.plan.md` |
 
 ## Open Questions
 - [ ] Which Claude model balances reasoning quality vs cost on a $5 budget? (decide in `/plan`)

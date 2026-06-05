@@ -3,8 +3,13 @@ import { runFactCheck } from './client.js'
 import { verifyFactCheck } from './verify.js'
 import type { VerifiedFactCheckResult } from './types.js'
 
-export async function factCheck(claim: string): Promise<VerifiedFactCheckResult> {
-  const { text, retrievedUrls } = await runFactCheck(claim)
+export interface FactCheckOutcome {
+  result: VerifiedFactCheckResult
+  searchesUsed: number
+}
+
+export async function factCheck(claim: string): Promise<FactCheckOutcome> {
+  const { text, retrievedUrls, searchesUsed } = await runFactCheck(claim)
   const parsed = parseFactCheckResult(text)
-  return verifyFactCheck(parsed, retrievedUrls)
+  return { result: verifyFactCheck(parsed, retrievedUrls), searchesUsed }
 }

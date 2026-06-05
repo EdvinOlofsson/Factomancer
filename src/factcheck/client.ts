@@ -17,6 +17,7 @@ function getClient(): Anthropic {
 export interface FactCheckRaw {
   text: string
   retrievedUrls: string[]
+  searchesUsed: number
 }
 
 export async function runFactCheck(claim: string): Promise<FactCheckRaw> {
@@ -56,5 +57,9 @@ export async function runFactCheck(claim: string): Promise<FactCheckRaw> {
     }
   }
 
-  return { text, retrievedUrls }
+  const searchesUsed =
+    (response.usage as { server_tool_use?: { web_search_requests?: number } })
+      ?.server_tool_use?.web_search_requests ?? 0
+
+  return { text, retrievedUrls, searchesUsed }
 }

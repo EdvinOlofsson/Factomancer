@@ -16,11 +16,11 @@ async function main(): Promise<void> {
   let matches = 0
 
   for (const golden of goldenClaims) {
-    const result = await factCheck(golden.claim)
+    const { result, searchesUsed } = await factCheck(golden.claim)
     const ok = result.verdict === golden.expected
     if (ok) matches++
 
-    console.log(`[${ok ? 'MATCH' : 'DIFF '}] expected=${golden.expected}  got=${result.verdict}`)
+    console.log(`[${ok ? 'MATCH' : 'DIFF '}] expected=${golden.expected}  got=${result.verdict}  searches=${searchesUsed}`)
     console.log(`        claim:  ${golden.claim}`)
     console.log(`        caveat: ${result.caveat}`)
     console.log(`        sources: ${result.sources.length}${result.basedOnModelKnowledge ? ' (none retrieved — model knowledge)' : ''}`)

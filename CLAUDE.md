@@ -96,3 +96,17 @@ Token-lean codemaps for AI context loading — read these before making large ch
 - `docs/CODEMAPS/factcheck-pipeline.md` — the AI pipeline in detail
 - `docs/CODEMAPS/commands.md` — command registration pattern, routing, rate limiting
 - `docs/CODEMAPS/dependencies.md` — packages, env vars, cost model
+
+## Testing
+
+This repo follows TDD. Write tests before or alongside implementation — never after as an afterthought.
+
+**Every new command module must have co-located unit tests** (`*.test.ts` next to the source file) covering at minimum:
+- `parse.ts` — JSON extraction, malformed input fallback
+- `verify.ts` — source URL cross-checking logic
+- `format.ts` — embed field presence/absence based on data shape
+- `prompt.ts` — correct user message construction
+
+Exclude only the Anthropic API client (`client.ts`) — it makes real HTTP calls and is not unit-testable without mocking infrastructure this repo intentionally avoids.
+
+Run tests with `pnpm test`. All tests must pass before committing.

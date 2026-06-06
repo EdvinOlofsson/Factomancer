@@ -3,3 +3,6 @@ dist/
 .env
 .claude/settings.local.json
 .reports/
+.claude/skills/
+.agents/
+skills-lock.json

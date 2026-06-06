@@ -5,6 +5,7 @@ import { pingCommand } from './commands/ping.js'
 import { factcheckCommand } from './commands/factcheck.js'
 import { usageCommand } from './commands/usage.js'
 import { perspectivesCommand } from './commands/perspectives.js'
+import { controversyCommand } from './commands/controversy.js'
 import { readyEvent } from './events/ready.js'
 import { interactionCreateEvent } from './events/interactionCreate.js'
 
@@ -19,6 +20,7 @@ commands.set(pingCommand.data.name, pingCommand)
 commands.set(factcheckCommand.data.name, factcheckCommand)
 commands.set(usageCommand.data.name, usageCommand)
 commands.set(perspectivesCommand.data.name, perspectivesCommand)
+commands.set(controversyCommand.data.name, controversyCommand)
 
 client.once(Events.ClientReady, readyEvent.execute)
 client.on(Events.InteractionCreate, (interaction) =>

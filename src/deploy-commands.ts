@@ -4,6 +4,7 @@ import { pingCommand } from './commands/ping.js'
 import { factcheckCommand } from './commands/factcheck.js'
 import { usageCommand } from './commands/usage.js'
 import { perspectivesCommand } from './commands/perspectives.js'
+import { controversyCommand } from './commands/controversy.js'
 
 const { DISCORD_TOKEN, CLIENT_ID, GUILD_ID } = process.env
 if (!DISCORD_TOKEN || !CLIENT_ID || !GUILD_ID) {
@@ -15,6 +16,7 @@ const commands = [
   factcheckCommand.data.toJSON(),
   usageCommand.data.toJSON(),
   perspectivesCommand.data.toJSON(),
+  controversyCommand.data.toJSON(),
 ]
 const rest = new REST().setToken(DISCORD_TOKEN)
 
